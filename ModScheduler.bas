@@ -1,8 +1,24 @@
 Attribute VB_Name = "ModScheduler"
 Option Explicit
 
+'ListBox RowSource FORM_DATA!ROOMS
+
 Const DAY_LABEL_WIDTH As Single = 30
 Const DAY_LABEL_HEIGHT As Single = 24
+
+Dim Wrappers As Collection
+
+Sub AAA()
+
+    Dim Frm As Object
+    Set Frm = FrmScheduler
+
+
+
+
+
+
+End Sub
 
 Function SetMonthLabel(Optional RefDate As Date) As Date
     If RefDate = Empty Then
@@ -13,6 +29,8 @@ Function SetMonthLabel(Optional RefDate As Date) As Date
 End Function
 
 Sub DrawDayLabels(Optional RefDate As Date)
+
+    Set Wrappers = New Collection
 
     If RefDate = Empty Then
         RefDate = Date
@@ -33,22 +51,14 @@ Sub DrawDayLabels(Optional RefDate As Date)
     Dim Col As Integer
     Col = BeginDay - 1
     
-    '0 1 2 3 4 5 6'
-    'S M T W T F S'
-    '''''''''''''''
-    
     Dim Row As Integer
     Row = 0
     
     Const DAY_LABEL_TOP_OFFSET As Single = 18
     Const DAY_LABEL_LEFT_OFFSET As Single = 0
     
-    'FrmScheduler.DrawBuffer
-    
     FrmScheduler.FrCalendar.Enabled = False
     Do While FrmScheduler.FrCalendar.Controls.Count > 7
-'        Dim Control As Control
-'        Set Control = FrmScheduler.FrCalendar.Controls(FrmScheduler.FrCalendar.Controls.Count - 1)
         FrmScheduler.FrCalendar.Controls.Remove FrmScheduler.FrCalendar.Controls.Count - 1
     Loop
     FrmScheduler.FrCalendar.Enabled = True
@@ -61,6 +71,11 @@ Sub DrawDayLabels(Optional RefDate As Date)
         Lbl.Top = DAY_LABEL_TOP_OFFSET + (Row * DAY_LABEL_HEIGHT)
         Lbl.Left = DAY_LABEL_LEFT_OFFSET + (Col * DAY_LABEL_WIDTH)
         Lbl.Caption = (Idx + 1)
+        
+        Dim Wrapper As LabelWrapper
+        Set Wrapper = New LabelWrapper
+        Set Wrapper.MyLabel = Lbl
+        Wrappers.Add Wrapper, Lbl.Name
         
         Col = Col + 1
         If Col Mod 7 = 0 Then
