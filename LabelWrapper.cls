@@ -9,9 +9,27 @@ Attribute VB_PredeclaredId = False
 Attribute VB_Exposed = False
 Option Explicit
 
-Public WithEvents MyLabel As MSForms.Label
-Attribute MyLabel.VB_VarHelpID = -1
+Private WithEvents pMyLabel As MSForms.Label
+Attribute pMyLabel.VB_VarHelpID = -1
+Private pDateValue As Date
 
-Private Sub MyLabel_Click()
-    MsgBox "Clicked! " & MyLabel.Name
+Property Let DateValue(RHS As Date)
+    pDateValue = RHS
+End Property
+
+Property Get DateValue() As Date
+    DateValue = pDateValue
+End Property
+
+Property Set MyLabel(RHS As MSForms.Label)
+    Set pMyLabel = RHS
+End Property
+
+Property Get MyLabel() As MSForms.Label
+    Set MyLabel = pMyLabel
+End Property
+
+Private Sub pMyLabel_Click()
+    'MsgBox MyLabel.Name & ": " & pDateValue
+    Call LoadRoomDetails(pDateValue)
 End Sub

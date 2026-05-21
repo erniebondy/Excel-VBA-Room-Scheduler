@@ -8,16 +8,40 @@ Const DAY_LABEL_HEIGHT As Single = 24
 
 Dim Wrappers As Collection
 
-Sub AAA()
+Sub LoadRoomDetails(DayLabelDate As Date)
+    
+    Dim Lbo As MSForms.ListBox
+    Set Lbo = FrmScheduler.LboRoomDetails
+    Lbo.Clear
+    
+    If FrmScheduler.SelectedRoom Is Nothing Then
+        Exit Sub
+    End If
+    
+    Dim Schedule As Schedule
+    For Each Schedule In FrmScheduler.SelectedRoom.Schedules
+        If DateValue(Schedule.DateValue) = DateValue(DayLabelDate) Then
+            Lbo.AddItem TimeValue(Schedule.DateValue)
+        End If
+'        Dim DayNum As Integer
+'        DayNum = Mid(DayLabelName, InStr(1, DayLabelName, "_") + 1)
+'        If DayNum = Day(Schedule.DateValue) Then
+'            Lbo.AddItem TimeValue(Schedule.DateValue)
+'        End If
+    Next
 
-    Dim Frm As Object
-    Set Frm = FrmScheduler
+End Sub
 
+Sub SetCalendar(Room As Room, RefDate As Date)
 
-
-
-
-
+    Dim Schedule As Schedule
+    For Each Schedule In Room.Schedules
+        If Year(Schedule.DateValue) = Year(RefDate) And Month(Schedule.DateValue) = Month(RefDate) Then
+            Dim DayLbl As MSForms.Label
+            Set DayLbl = FrmScheduler.FrCalendar.Controls("LblDay_" & Day(Schedule.DateValue))
+            DayLbl.BackColor = &HC0C0FF
+        End If
+    Next
 End Sub
 
 Function SetMonthLabel(Optional RefDate As Date) As Date
@@ -75,6 +99,7 @@ Sub DrawDayLabels(Optional RefDate As Date)
         Dim Wrapper As LabelWrapper
         Set Wrapper = New LabelWrapper
         Set Wrapper.MyLabel = Lbl
+        Wrapper.DateValue = DateSerial(Year(RefDate), Month(RefDate), (Idx + 1))
         Wrappers.Add Wrapper, Lbl.Name
         
         Col = Col + 1
